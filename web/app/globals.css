@@ -1,0 +1,20 @@
+:root{--bg:#0f1115;--card:#141820;--text:#e6edf3;--muted:#9aa4b2;--accent:#4f79ff;--accent2:#22c55e;--border:#232a35}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji"}
+.container{max-width:960px;margin:0 auto;padding:24px}
+.header{border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0f1115,#111420)}
+.header h1{margin:0;font-size:28px}
+.header p{margin:4px 0 0;color:var(--muted)}
+.nav{margin-top:8px;display:flex;gap:12px}
+.nav a{color:#9db2ff;text-decoration:none}
+.nav a:hover{text-decoration:underline}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0}
+.form{display:grid;gap:12px;grid-template-columns:1fr}
+.form label{font-weight:600}
+.form input[type="text"],.form input[type="password"],.form input[type="url"],.form textarea,.form select{padding:12px;border-radius:8px;border:1px solid var(--border);background:#0f131a;color:var(--text)}
+.btn{display:inline-block;padding:10px 14px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;border:none;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ul{list-style:none;padding:0;margin:0}
+li{margin:6px 0}

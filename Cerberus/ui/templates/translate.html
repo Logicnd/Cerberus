@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Translate Code</h2>
+  <form method="post" class="form form-vertical">
+    <label for="src">Source Language</label>
+    <select id="src" name="src">
+      <option value="python" {% if src == 'python' %}selected{% endif %}>Python</option>
+      <option value="html" {% if src == 'html' %}selected{% endif %}>HTML</option>
+    </select>
+    <label for="dst">Target Language</label>
+    <select id="dst" name="dst">
+      <option value="html" {% if dst == 'html' %}selected{% endif %}>HTML</option>
+      <option value="javascript" {% if dst == 'javascript' %}selected{% endif %}>JavaScript</option>
+      <option value="python" {% if dst == 'python' %}selected{% endif %}>Python</option>
+    </select>
+    <label for="code">Code</label>
+    <textarea id="code" name="code" rows="10" placeholder="Paste code here">{{ code or '' }}</textarea>
+    <button type="submit" class="btn">Translate</button>
+  </form>
+</section>
+
+{% if output %}
+<section class="card">
+  <h3>Output</h3>
+  <pre><code>{{ output }}</code></pre>
+</section>
+<section class="card">
+  <h3>Analysis Summary</h3>
+  <ul>
+    <li>Dependencies: {{ analysis.get('dependencies') }}</li>
+    <li>Complexity: {{ analysis.get('complexity') }}</li>
+    <li>Vulnerabilities: {{ analysis.get('vulnerabilities') }}</li>
+    <li>Links: {{ links.get('urls')|length }} URLs, {{ links.get('api_paths')|length }} API paths</li>
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

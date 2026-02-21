@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Decode</h2>
+  <form method="post" class="form form-vertical">
+    <label for="scheme">Scheme</label>
+    <select id="scheme" name="scheme">
+      <option value="base64" {% if scheme == 'base64' %}selected{% endif %}>Base64</option>
+      <option value="hex" {% if scheme == 'hex' %}selected{% endif %}>Hex</option>
+      <option value="rot13" {% if scheme == 'rot13' %}selected{% endif %}>ROT13</option>
+      <option value="xor" {% if scheme == 'xor' %}selected{% endif %}>XOR</option>
+      <option value="auto" {% if scheme == 'auto' %}selected{% endif %}>Auto</option>
+    </select>
+    <label for="data">Data</label>
+    <textarea id="data" name="data" rows="8">{{ data or '' }}</textarea>
+    <label for="key">Key (XOR)</label>
+    <input id="key" name="key" type="text" value="{{ key or '' }}">
+    <button type="submit" class="btn">Decode</button>
+  </form>
+</section>
+{% if output %}
+<section class="card">
+  <h3>Output</h3>
+  <pre><code>{{ output }}</code></pre>
+</section>
+{% endif %}
+{% endblock %}

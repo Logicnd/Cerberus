@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>System Status</h2>
+  <ul>
+    <li>OS: {{ info.os }}</li>
+    <li>Release: {{ info.release }}</li>
+    <li>Version: {{ info.version }}</li>
+    <li>Machine: {{ info.machine }}</li>
+    <li>Python: {{ info.python }}</li>
+    <li>Hostname: {{ info.hostname }}</li>
+    <li>IPs: {{ info.ips }}</li>
+    <li>Environment Variables (count): {{ info.env_count }}</li>
+  </ul>
+</section>
+{% endblock %}

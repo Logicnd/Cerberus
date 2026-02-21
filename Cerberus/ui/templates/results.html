@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Results</h2>
+  <div class="grid">
+    <div>
+      <h3>Target</h3>
+      <p>{{ target }}</p>
+      <div class="actions">
+        <a class="btn" href="{{ url_for('download_json') }}">Download JSON</a>
+        <a class="btn" href="{{ url_for('download_md') }}">Download Markdown</a>
+      </div>
+    </div>
+    <div>
+      <h3>Summary</h3>
+      <ul>
+        <li>Pages: {{ recon.get('spider', {}).get('pages', [])|length }}</li>
+        <li>Forms: {{ recon.get('spider', {}).get('forms', [])|length }}</li>
+        <li>Scripts: {{ recon.get('spider', {}).get('scripts', [])|length }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>HTTP Headers</h3>
+  <ul>
+    {% for k, v in recon.get('http_headers', {}).items() %}
+    <li><strong>{{ k }}</strong>: {{ v }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="card">
+  <h3>DNS</h3>
+  {% set dns = recon.get('dns_whois', {}).get('dns', {}) %}
+  <ul>
+    <li>Host: {{ dns.get('host') }}</li>
+    <li>IP: {{ dns.get('ip') }}</li>
+    <li>PTR: {{ dns.get('ptr') }}</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h3>Fingerprint</h3>
+  {% set fp = recon.get('fingerprint', {}) %}
+  {% set srv = fp.get('server', {}) %}
+  <ul>
+    <li>Server: {{ srv.get('server') }}</li>
+    <li>Powered-By: {{ srv.get('powered_by') }}</li>
+  </ul>
+  <h4>Frameworks</h4>
+  <ul>
+    {% for k, v in fp.get('frameworks', {}).items() %}
+      {% if v %}
+      <li>{{ k }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="card">
+  <h3>Findings</h3>
+  {% if findings %}
+  <div class="finding-list">
+    {% for f in findings %}
+    <article class="finding">
+      <header class="finding-header">
+        <span class="finding-type">{{ f.get('type') }}</span>
+        {% set sev = (f.get('severity') or '').lower() %}
+        <span class="badge {% if sev == 'high' %}badge-high{% elif sev == 'medium' %}badge-medium{% else %}badge-low{% endif %}">
+          {{ f.get('severity') }}
+        </span>
+      </header>
+      <div class="finding-body">
+        <div class="finding-details">{{ f.get('details') }}</div>
+        <div class="finding-remediation">{{ f.get('remediation') }}</div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No findings.</p>
+  {% endif %}
+</section>
+{% endblock %}

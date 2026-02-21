@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Analyze Code</h2>
+  <form method="post" class="form form-vertical">
+    <label for="lang">Language</label>
+    <select id="lang" name="lang">
+      <option value="python" {% if lang == 'python' %}selected{% endif %}>Python</option>
+      <option value="html" {% if lang == 'html' %}selected{% endif %}>HTML</option>
+    </select>
+    <label for="code">Code</label>
+    <textarea id="code" name="code" rows="10" placeholder="Paste code here">{{ code or '' }}</textarea>
+    <button type="submit" class="btn">Analyze</button>
+  </form>
+</section>
+
+{% if analysis %}
+<section class="card">
+  <h3>Results</h3>
+  <ul>
+    <li>Dependencies: {{ analysis.get('dependencies') }}</li>
+    <li>Complexity: {{ analysis.get('complexity') }}</li>
+    <li>Vulnerabilities: {{ analysis.get('vulnerabilities') }}</li>
+    <li>Links: {{ links.get('urls')|length }} URLs, {{ links.get('api_paths')|length }} API paths</li>
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

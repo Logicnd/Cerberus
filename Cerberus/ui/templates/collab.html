@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Collaboration</h2>
+  <form method="post" action="{{ url_for('comment') }}" class="form form-vertical">
+    <label for="text">Comment</label>
+    <textarea id="text" name="text" rows="4" placeholder="Type a note"></textarea>
+    <button type="submit" class="btn">Post</button>
+  </form>
+</section>
+<section class="card">
+  <h3>Recent Comments</h3>
+  <ul>
+    {% for c in comments %}
+    <li><strong>{{ c.user }}</strong>: {{ c.text }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

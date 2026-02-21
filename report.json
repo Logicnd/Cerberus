@@ -1,0 +1,8 @@
+[
+    {
+        "type": "Missing Security Headers",
+        "severity": "Low",
+        "details": "The following security headers are missing: X-Content-Type-Options, X-Frame-Options, Content-Security-Policy, Strict-Transport-Security",
+        "remediation": "Implement the missing security headers to enhance application security."
+    }
+]

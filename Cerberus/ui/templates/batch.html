@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Batch Translate & Analyze</h2>
+  <form method="post" class="form form-vertical">
+    <label for="source_lang">Source Language</label>
+    <select id="source_lang" name="source_lang">
+      <option value="python" {% if source_lang == 'python' %}selected{% endif %}>Python</option>
+      <option value="html" {% if source_lang == 'html' %}selected{% endif %}>HTML</option>
+    </select>
+    <label for="target_lang">Target Language</label>
+    <select id="target_lang" name="target_lang">
+      <option value="html" {% if target_lang == 'html' %}selected{% endif %}>HTML</option>
+      <option value="javascript" {% if target_lang == 'javascript' %}selected{% endif %}>JavaScript</option>
+      <option value="python" {% if target_lang == 'python' %}selected{% endif %}>Python</option>
+    </select>
+    <label for="texts">Items (separate entries with a blank line)</label>
+    <textarea id="texts" name="texts" rows="10">{{ texts or '' }}</textarea>
+    <button type="submit" class="btn">Run</button>
+  </form>
+</section>
+
+{% if translated %}
+<section class="card">
+  <h3>Results</h3>
+  <div class="grid">
+    <div>
+      <h4>Translated</h4>
+      <ol>
+        {% for t in translated %}
+        <li><pre><code>{{ t }}</code></pre></li>
+        {% endfor %}
+      </ol>
+    </div>
+    <div>
+      <h4>Analysis</h4>
+      <ol>
+        {% for a in analyzed %}
+        <li>
+          <ul>
+            <li>Dependencies: {{ a.dependencies }}</li>
+            <li>Complexity: {{ a.complexity }}</li>
+            <li>Vulnerabilities: {{ a.vulnerabilities }}</li>
+          </ul>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

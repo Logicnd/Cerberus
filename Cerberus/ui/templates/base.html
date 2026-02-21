@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cerberus</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Cerberus</h1>
+      <p>Educational Vulnerability Assessment</p>
+      <nav class="nav">
+        <a href="{{ url_for('index') }}">Scan</a>
+        <a href="{{ url_for('translate') }}">Translate</a>
+        <a href="{{ url_for('analyze') }}">Analyze</a>
+        <a href="{{ url_for('collab') }}">Collab</a>
+        <a href="{{ url_for('repo') }}">Repo</a>
+        <a href="{{ url_for('status') }}">Status</a>
+        <a href="{{ url_for('decode') }}">Decode</a>
+        <a href="{{ url_for('batch') }}">Batch</a>
+        {% if session.get('user') %}
+        <form method="post" action="{{ url_for('logout') }}" style="display:inline">
+          <button class="btn" type="submit">Logout ({{ session.get('user') }})</button>
+        </form>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <span>Use only with authorization</span>
+    </div>
+  </footer>
+</body>
+</html>

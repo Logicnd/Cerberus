@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Login</h2>
+  <form method="post" class="form form-vertical">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required>
+    <button type="submit" class="btn">Login</button>
+  </form>
+  {% if error %}
+  <p class="error">Invalid credentials</p>
+  {% endif %}
+</section>
+{% endblock %}

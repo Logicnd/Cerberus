@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Start Scan</h2>
+  <form method="post" action="{{ url_for('scan') }}" class="form">
+    <label for="target">Target URL</label>
+    <input id="target" name="target" type="url" placeholder="http://example.com" required>
+    <button type="submit" class="btn">Run</button>
+  </form>
+  <div class="help">
+    <p>This UI performs authorized reconnaissance and passive checks. Reports are saved as JSON and Markdown.</p>
+  </div>
+{% endblock %}
