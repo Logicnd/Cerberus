@@ -54,6 +54,11 @@ CERBERUS_PASSWORD=change-me
 CERBERUS_SECRET=some-long-random-string
 ```
 - Credentials are loaded from .env (or the process env) and used for the single login
+- To disable login completely for demos, set:
+```bash
+CERBERUS_DEMO=1
+```
+This auto-authenticates every visitor as a demo user. Do not enable in production.
 
 ## Web (Next.js)
 ```bash
