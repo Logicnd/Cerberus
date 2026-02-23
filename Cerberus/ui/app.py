@@ -2,7 +2,6 @@ import os
 import io
 import sys
 from flask import Flask, render_template, request, send_file, redirect, url_for, session
-from werkzeug.security import generate_password_hash, check_password_hash
 base_dir = os.path.dirname(os.path.abspath(__file__))
 pkg_dir = os.path.abspath(os.path.join(base_dir, ".."))
 if pkg_dir not in sys.path:
@@ -16,25 +15,44 @@ from codeintel.links import LinkFinder
 from codeintel.report import markdown_summary
 from codeintel.docgen import generate as doc_generate
 
+
+def _load_env(path):
+    if not os.path.exists(path):
+        return
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = value
+    except Exception:
+        pass
+
+root_dir = os.path.abspath(os.path.join(base_dir, "..", ".."))
+_load_env(os.path.join(root_dir, ".env"))
+_load_env(os.path.join(os.path.dirname(base_dir), ".env"))
+
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = os.environ.get("CERBERUS_SECRET", os.urandom(24))
 
 last_results = {}
 audit_log = "audit.log"
-users = {}
-admin_pw = os.environ.get("CERBERUS_ADMIN_PASSWORD")
-if admin_pw:
-    users["admin"] = {"hash": generate_password_hash(admin_pw), "role": "admin"}
-analyst_pw = os.environ.get("CERBERUS_ANALYST_PASSWORD")
-if analyst_pw:
-    users["analyst"] = {"hash": generate_password_hash(analyst_pw), "role": "analyst"}
 comments = []
+APP_USERNAME = os.environ.get("CERBERUS_USERNAME", "cerberus")
+APP_PASSWORD = os.environ.get("CERBERUS_PASSWORD", "change-me")
+
 
 def require_role(*roles):
     def wrapper(fn):
         def inner(*args, **kwargs):
-            role = session.get("role")
-            if role in roles:
+            if session.get("user"):
                 return fn(*args, **kwargs)
             return redirect(url_for("login"))
         inner.__name__ = fn.__name__
@@ -68,8 +86,6 @@ def scan():
 def translate():
     if request.method == "GET":
         return render_template("translate.html")
-    if not session.get("role") in ("admin", "analyst"):
-        return redirect(url_for("login"))
     code = request.form.get("code", "")
     src = request.form.get("src", "python")
     dst = request.form.get("dst", "html")
@@ -92,8 +108,6 @@ def translate():
 def analyze():
     if request.method == "GET":
         return render_template("analyze.html")
-    if not session.get("role") in ("admin", "analyst"):
-        return redirect(url_for("login"))
     code = request.form.get("code", "")
     lang = request.form.get("lang", "python")
     an = Analyzer()
@@ -154,18 +168,26 @@ def login():
         return render_template("login.html", error=None)
     username = request.form.get("username", "")
     password = request.form.get("password", "")
-    u = users.get(username)
-    if u and check_password_hash(u["hash"], password):
+    if username == APP_USERNAME and password == APP_PASSWORD:
         session["user"] = username
-        session["role"] = u["role"]
         _audit("login", {"user": username})
         return redirect(url_for("index"))
     return render_template("login.html", error="invalid")
 
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json(silent=True) or {}
+    username = data.get("username", "")
+    password = data.get("password", "")
+    if username == APP_USERNAME and password == APP_PASSWORD:
+        session["user"] = username
+        _audit("login", {"user": username})
+        return {"ok": True}
+    return {"ok": False, "error": "invalid"}, 401
+
 @app.route("/logout", methods=["POST"])
 def logout():
     u = session.pop("user", None)
-    session.pop("role", None)
     _audit("logout", {"user": u})
     return redirect(url_for("index"))
 

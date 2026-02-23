@@ -47,7 +47,13 @@ python ui/app.py
 - /status: system status (admin)
 
 ### Auth
-- Set CERBERUS_ADMIN_PASSWORD and optionally CERBERUS_ANALYST_PASSWORD before starting
+- Create a .env file in the project root:
+```bash
+CERBERUS_USERNAME=cerberus
+CERBERUS_PASSWORD=change-me
+CERBERUS_SECRET=some-long-random-string
+```
+- Credentials are loaded from .env (or the process env) and used for the single login
 
 ## Web (Next.js)
 ```bash
